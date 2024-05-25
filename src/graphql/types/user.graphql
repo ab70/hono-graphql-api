@@ -1,0 +1,10 @@
+#Types
+type User {
+  id: ID
+  username: String!
+  password: String!
+
+  #interface required
+  createdAt: Date!
+  updatedAt: Date!
+}

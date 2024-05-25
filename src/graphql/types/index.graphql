@@ -1,0 +1,12 @@
+scalar Date
+
+type Query {
+  #User
+  user(username: String!, password: String!): User
+  getAllUser: [User]
+}
+type Mutation {
+  # Auth
+  signup(username: String!, password: String!): User
+  login(username: String!, password: String!): User
+}

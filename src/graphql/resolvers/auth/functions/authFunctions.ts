@@ -1,6 +1,7 @@
 import { eq, } from "drizzle-orm"
-import { db } from "../db/db"
-import { users } from "../schema/user"
+import { users } from "../../../../schema/user";
+import { db } from "../../../../db/db";
+
 
 const getUserByCredentials = async ({ username, password }) => {
     try {
@@ -17,25 +18,22 @@ const getUserByCredentials = async ({ username, password }) => {
 }
 const createUser = async ({ username, password }) => {
     try {
-        const saveUser = await db.insert(users).values({
-            username: username,
-            role: "admin",
-            rights: "*",
-            password: password
-        })
-        console.log("saved");
-
-        // if (saveUser) {
-        // }
-        return { success: true, message: "User signup successful" }
-        // return { success: false, message: "User signup failed" }
-
+        // check if user exist in db if exist then return success false otherwise add the user with pass encrypt
+        const [findUser] = await db.select().from(users).where(eq(users.username, username))
+        if (findUser) {
+            return { success: false, message: "User already exist" }
+        } else {
+            await db.insert(users).values({
+                username,
+                password: Bun.password.hashSync(password, { algorithm: "bcrypt", cost: 10 }),
+            })
+            return { success: true, message: "User created" }
+        }
     } catch (err) {
-        console.log(err);
-
-        return { success: false, message: err.message }
+        return { success: false, message: "Something went wrong" }
     }
 }
+
 
 // LOGIN
 const loginUser = async ({ username, password }) => {
