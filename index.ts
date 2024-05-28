@@ -6,10 +6,7 @@ import yogaConf from './src/graphql';
 const app = new Hono()
 
 
-// initRoute(app)
-
 export default {
   fetch: yogaConf.fetch,
-  // fetch: app.fetch,
   port: 4001,
 }
