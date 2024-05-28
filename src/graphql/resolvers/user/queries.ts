@@ -2,6 +2,7 @@ import { sign } from "hono/jwt";
 import { hResponse } from "../../../utils/types";
 import { loginUser } from "../auth/functions/authFunctions";
 import { getAllUsers } from "./functions/userFunctions";
+import { YogaInitialContext } from "graphql-yoga";
 
 const userQueries = {
   user: async (_, { username, password }) => {
@@ -25,7 +26,10 @@ const userQueries = {
       return null;
     }
   },
-  getAllUser: async (_) => {
+  getAllUser: async (_,{}, ctx:YogaInitialContext) => {
+    const cookiesValue = await ctx.request.cookieStore?.get("hello")
+    console.log("cookie value", cookiesValue);
+    
     const allUser = await getAllUsers();
     return allUser?.data;
   },
